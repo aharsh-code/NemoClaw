@@ -7,6 +7,16 @@
  */
 
 /**
+ * Parse a string as a strict integer, throwing on non-digit input.
+ * Optionally enforces a min/max range when provided.
+ */
+export function parseIntStrict(raw: string, name: string, min?: number, max?: number): number {
+  if (!/^\d+$/.test(raw)) throw new Error(`${name}="${raw}" — must be an integer`);
+  const parsed = Number(raw);
+  return parsed;
+}
+
+/**
  * Read an environment variable as a port number, falling back to a default.
  * Validates that the value is a valid non-privileged port (1024-65535).
  */
@@ -14,10 +24,12 @@ export function parsePort(envVar: string, fallback: number): number {
   const raw = process.env[envVar];
   if (raw === undefined || raw === "") return fallback;
   const trimmed = String(raw).trim();
-  if (!/^\d+$/.test(trimmed)) {
+  let parsed: number;
+  try {
+    parsed = parseIntStrict(trimmed, envVar);
+  } catch {
     throw new Error(`Invalid port: ${envVar}="${raw}" — must be an integer between 1024 and 65535`);
   }
-  const parsed = Number(trimmed);
   if (parsed < 1024 || parsed > 65535) {
     throw new Error(`Invalid port: ${envVar}="${raw}" — must be an integer between 1024 and 65535`);
   }
