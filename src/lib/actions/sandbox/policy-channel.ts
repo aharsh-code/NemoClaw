@@ -8,6 +8,7 @@ import { type AgentDefinition, loadAgent } from "../../agent/defs";
 import { CLI_DISPLAY_NAME, CLI_NAME } from "../../cli/branding";
 import { prompt as askPrompt, getCredential } from "../../credentials/store";
 import { recoverNamedGatewayRuntime } from "../../gateway-runtime-action";
+import { errorMessage } from "../../core/error-message";
 import {
   type ChannelManifest,
   createBuiltInChannelManifestRegistry,
@@ -856,7 +857,7 @@ async function planSandboxChannelAdd(
     return plan;
   } catch (error) {
     console.error(`  Failed to plan messaging channel '${channelId}'.`);
-    console.error(`  ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`  ${errorMessage(error)}`);
     process.exit(1);
   }
 }

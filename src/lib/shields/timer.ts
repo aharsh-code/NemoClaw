@@ -11,6 +11,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { isRecord, type UnknownRecord } from "../core/json-types";
+import { errorMessage } from "../core/error-message";
 import { buildPolicySetCommand } from "../policy";
 import { run } from "../runner";
 import { resolveAgentConfig } from "../sandbox/config";
@@ -253,7 +254,7 @@ function runRestoreTimer(args: TimerArgs): void {
             sandbox: args.sandboxName,
             timestamp: now,
             restored_by: "auto_timer",
-            warning: error instanceof Error ? error.message : String(error),
+            warning: errorMessage(error),
             lock_verified: false,
           });
         }
@@ -302,7 +303,7 @@ function runRestoreTimer(args: TimerArgs): void {
       sandbox: args.sandboxName,
       timestamp: now,
       restored_by: "auto_timer",
-      error: error instanceof Error ? error.message : String(error),
+      error: errorMessage(error),
     });
     exitCode = 1;
   } finally {

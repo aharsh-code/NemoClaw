@@ -50,9 +50,7 @@ export function cleanupStaleHostFiles(): void {
         console.log(`  Removed stale ${file.description}.`);
       }
     } catch (error) {
-      console.error(
-        `  Skipped stale-file cleanup ${file.description}: ${errorMessage(error)}`,
-      );
+      console.error(`  Skipped stale-file cleanup ${file.description}: ${errorMessage(error)}`);
     }
   }
 }
