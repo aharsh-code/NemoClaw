@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { redactSensitiveText } from "../../security/redact";
+import { errorMessage } from "../../core/error-message";
 import {
   addOnboardMachineEventListener,
   emitOnboardMachineEvent,
@@ -104,7 +105,7 @@ export class OnboardHookDispatcher {
         }
       } catch (error) {
         const name = hookName(hook, index);
-        const message = error instanceof Error ? error.message : String(error);
+        const message = errorMessage(error);
         this.warn(`Onboard hook '${name}' failed: ${redactSensitiveText(message) ?? "<redacted>"}`);
         if (shouldEmitLifecycle) {
           this.emitEvent(

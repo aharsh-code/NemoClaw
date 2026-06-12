@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { errorMessage } from "../../core/error-message";
 import {
   POLICY_CONTEXT_SANDBOX_PATH,
   writePolicyContextToSandbox,
@@ -40,7 +41,7 @@ export interface RefreshDeps {
 const DEFAULT_WARN = (line: string) => console.error(line);
 
 const DEFAULT_UNEXPECTED = (error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
+  const message = errorMessage(error);
   console.error(`  Unexpected error refreshing ${POLICY_CONTEXT_SANDBOX_PATH}: ${message}`);
 };
 
@@ -59,7 +60,7 @@ export function refreshSandboxPolicyContextFile(
     return {
       written: false,
       outcome: "crashed",
-      errorMessage: error instanceof Error ? error.message : String(error),
+      errorMessage: errorMessage(error),
     };
   }
   if (result.written) {

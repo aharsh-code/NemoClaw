@@ -4,6 +4,7 @@
 import type { CurlProbeResult } from "../adapters/http/probe";
 import { getCurlTimingArgs, runCurlProbe } from "../adapters/http/probe";
 import type { ModelCatalogFetchResult, ModelValidationResult } from "../onboard/types";
+import { errorMessage } from "../core/error-message";
 
 // credentials.ts still uses CommonJS-style exports.
 const { normalizeCredentialValue } = require("../credentials/store");
@@ -71,7 +72,7 @@ function toModelCatalogFetchResult(
       ok: false,
       httpStatus: result.httpStatus,
       curlStatus: result.curlStatus,
-      message: error instanceof Error ? error.message : String(error),
+      message: errorMessage(error),
     };
   }
 }
@@ -98,7 +99,7 @@ export function fetchNvidiaEndpointModels(
       ok: false,
       httpStatus: 0,
       curlStatus: 0,
-      message: error instanceof Error ? error.message : String(error),
+      message: errorMessage(error),
     };
   }
 }
@@ -155,7 +156,7 @@ export function fetchOpenAiLikeModels(
       ok: false,
       httpStatus: 0,
       curlStatus: 0,
-      message: error instanceof Error ? error.message : String(error),
+      message: errorMessage(error),
     };
   }
 }
@@ -182,7 +183,7 @@ export function fetchAnthropicModels(
       ok: false,
       httpStatus: 0,
       curlStatus: 0,
-      message: error instanceof Error ? error.message : String(error),
+      message: errorMessage(error),
     };
   }
 }
