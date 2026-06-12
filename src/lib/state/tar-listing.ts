@@ -7,6 +7,8 @@ import os from "node:os";
 import path from "node:path";
 import { StringDecoder } from "node:string_decoder";
 
+import { errorMessage } from "../core/error-message";
+
 // Compatibility boundary: existing backups are raw tar streams, so validation
 // still shells out to system tar. Route listings through a bounded temp file
 // instead of child-process stdout buffers; remove this path when backup
@@ -85,7 +87,7 @@ export function runTarListing(
     readTextLinesFromFile(listingPath, onLine);
     return null;
   } catch (error) {
-    return `${failureLabel} failed: ${error instanceof Error ? error.message : String(error)}`;
+    return `${failureLabel} failed: ${errorMessage(error)}`;
   } finally {
     if (listingFd !== null) closeSync(listingFd);
     rmSync(tempDir, { recursive: true, force: true });
