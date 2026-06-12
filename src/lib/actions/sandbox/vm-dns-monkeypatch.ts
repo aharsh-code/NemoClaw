@@ -8,6 +8,7 @@ import path from "node:path";
 import { type CaptureOpenshellResult, stripAnsi } from "../../adapters/openshell/client";
 import { captureOpenshell } from "../../adapters/openshell/runtime";
 import type { SandboxEntry } from "../../state/registry";
+import { errorMessage } from "../../core/error-message";
 
 const GVPROXY_DNS = "192.168.127.1";
 const INIT_SCRIPT_RELATIVE_PATH = ["srv", "openshell-vm-sandbox-init.sh"] as const;
@@ -65,7 +66,7 @@ function readTextFileIfPresent(filePath: string): string | null {
   }
 }
 
-function errorMessage(error: unknown): string {
+function formatError(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
