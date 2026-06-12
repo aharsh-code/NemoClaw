@@ -36,6 +36,14 @@ jobs:
               .map(f => `### ${f.filename}\n\`\`\`diff\n${f.patch ?? ''}\n\`\`\``)
               .join('\n\n')
 
+            const health = await fetch(`https://api.greptile.com/v2/repositories?remote=github&repository=${owner}/${repo}&branch=main`, {
+              headers: {
+                Authorization: `Bearer ${process.env.GREPTILE_API_KEY}`,
+                'X-GitHub-Token': process.env.GITHUB_TOKEN
+              }
+            }) 
+            console.log(await health.text())
+
             // Step 2: Call Greptile
             const res = await fetch('https://api.greptile.com/v2/query', {
               method: 'POST',
