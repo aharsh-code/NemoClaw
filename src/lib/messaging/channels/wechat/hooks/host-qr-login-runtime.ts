@@ -5,6 +5,7 @@ import { saveCredential } from "../../../../credentials/store";
 import { HOST_QR_LOGIN_HANDLERS, type HostQrLoginResult } from "../../../../host-qr-handlers";
 import { wechatManifest } from "../manifest";
 import type { WechatIlinkLoginHookOptions, WechatLoginResult } from "./ilink-login";
+import { errorMessage } from "../../../../core/error-message";
 
 export function createDefaultWechatHostQrLoginOptions(): WechatIlinkLoginHookOptions {
   return {
@@ -23,7 +24,7 @@ function createWechatHostQrLoginRunner(): () => Promise<WechatLoginResult> {
     try {
       result = await handler();
     } catch (error) {
-      result = { kind: "error", message: error instanceof Error ? error.message : String(error) };
+      result = { kind: "error", message: errorMessage(error) };
     }
 
     if (result.kind !== "ok") {
