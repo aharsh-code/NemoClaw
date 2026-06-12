@@ -4,6 +4,7 @@
 import type { AgentDefinition } from "../agent/defs";
 import { loadAgent } from "../agent/defs";
 import { getVersion } from "../core/version";
+import { errorMessage } from "../core/error-message";
 import { getNameValidationGuidance, NAME_ALLOWED_FORMAT } from "../name-validation";
 import { validateName } from "../runner";
 import type { SandboxEntry } from "../state/registry";
@@ -172,8 +173,8 @@ export function createPromptValidatedSandboxName(deps: PromptSandboxNameDeps) {
         }
         return validatedSandboxName;
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        console.error(`  ${errorMessage}`);
+        const msg = errorMessage(error);
+        console.error(`  ${msg}`);
       }
 
       for (const line of getNameValidationGuidance("sandbox name", sandboxName, {

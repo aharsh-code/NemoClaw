@@ -3,6 +3,7 @@
 
 import { Errors, Flags } from "@oclif/core";
 
+import { errorMessage } from "../core/error-message";
 import { parseDuration } from "../domain/duration";
 
 const LOGS_SINCE_DURATION_RE = /^[1-9]\d*(?:ms|s|m|h|d)$/i;
@@ -20,8 +21,7 @@ export function parseShieldsTimeoutDuration(input: string): string {
   try {
     parseDuration(trimmed);
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    throw new Errors.CLIError(message);
+    throw new Errors.CLIError(errorMessage(error));
   }
   return trimmed;
 }

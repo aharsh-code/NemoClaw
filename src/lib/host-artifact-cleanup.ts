@@ -13,6 +13,7 @@
 // folder or symlink instead of a file, widen the shape at that point.
 
 import { removeLegacyCredentialsFileIfEmpty } from "./credentials/store";
+import { errorMessage } from "./core/error-message";
 
 interface StaleHostFile {
   /** Human-readable description for the success log line. */
@@ -49,11 +50,7 @@ export function cleanupStaleHostFiles(): void {
         console.log(`  Removed stale ${file.description}.`);
       }
     } catch (error) {
-      console.error(
-        `  Skipped stale-file cleanup ${file.description}: ${
-          error instanceof Error ? error.message : String(error)
-        }`,
-      );
+      console.error(`  Skipped stale-file cleanup ${file.description}: ${errorMessage(error)}`);
     }
   }
 }

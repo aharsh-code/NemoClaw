@@ -6,6 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { redactForLog, redactFull, redactUrl } from "./security/redact";
+import { errorMessage } from "./core/error-message";
 
 type TraceStatusCode = "OK" | "ERROR" | "UNSET";
 type TraceAttribute = string | number | boolean | null | string[] | number[] | boolean[];
@@ -302,14 +303,14 @@ export function withTraceSpan<T>(
           return value;
         })
         .catch((error) => {
-          trace.endSpan(span, "ERROR", error instanceof Error ? error.message : String(error));
+          trace.endSpan(span, "ERROR", errorMessage(error));
           throw error;
         }) as T;
     }
     trace.endSpan(span, "OK");
     return result;
   } catch (error) {
-    trace.endSpan(span, "ERROR", error instanceof Error ? error.message : String(error));
+    trace.endSpan(span, "ERROR", errorMessage(error));
     throw error;
   }
 }

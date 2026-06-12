@@ -6,6 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { sleepSeconds } from "../core/wait";
+import { errorMessage } from "../core/error-message";
 import { isGatewayHealthy } from "../state/gateway";
 import { envInt } from "./env";
 import { isDockerDriverGatewayHttpReady } from "./gateway-http-readiness";
@@ -254,7 +255,7 @@ export function startOpenShellGatewayUserService(
   try {
     opts.prepareServiceEnv?.();
   } catch (error) {
-    const detail = error instanceof Error ? error.message : String(error);
+    const detail = errorMessage(error);
     return {
       attempted: true,
       fallbackAllowed: false,
