@@ -53,8 +53,25 @@ jobs:
               })
             })
 
-            const data = await res.json()
-            const review = data.message
+            // Log raw response for debugging
+            const rawText = await res.text()
+            console.log('Greptile status:', res.status)
+            console.log('Greptile raw response:', rawText)
+
+            // Safely parse JSON
+            let data
+            try {
+              data = JSON.parse(rawText)
+            } catch (e) {
+              await github.rest.issues.createComment({
+                owner, repo,
+                issue_number: pr.number,
+                body: `## 🤖 AI Code Review\n\n❌ Greptile API error:\n\`\`\`\n${rawText}\n\`\`\``
+              })
+              throw new Error(`Greptile returned non-JSON response: ${rawText}`)
+            }
+
+            const review = data.message ?? data.error ?? JSON.stringify(data)
 
             // Step 3: Post review comment on the PR
             await github.rest.issues.createComment({
