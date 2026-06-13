@@ -16,6 +16,7 @@ const { fork } = require("child_process");
 const { randomBytes } = require("crypto");
 const { run, runCapture, validateName } = require("../runner");
 const { dockerExecFileSync } = require("../adapters/docker/exec");
+const { errorMessage } = require("../core/error-message");
 const {
   privilegedSandboxExecArgv,
 }: typeof import("../sandbox/privileged-exec") = require("../sandbox/privileged-exec");
@@ -220,7 +221,7 @@ function loadShieldsState(sandboxName: string): LoadedShieldsState {
     const state: ShieldsState = parsed;
     return { ...state, _hasStateFile: true };
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
+    const message = errorMessage(error);
     return {
       _hasStateFile: true,
       _isCorrupt: true,
@@ -858,7 +859,7 @@ function activateLockdownFromSnapshot(
       fileHashes: lockResult.fileHashes,
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
+    const message = errorMessage(error);
     return { ok: false, error: message };
   }
 }

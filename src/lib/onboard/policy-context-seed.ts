@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { errorMessage } from "../core/error-message";
+
 /**
  * Best-effort seed of the in-sandbox policy context file after the onboard
  * policy step. The refresh helper classifies the runtime outcome (`ok` /
@@ -82,8 +84,8 @@ export function seedInitialPolicyContext(
   try {
     refresh(sandboxName);
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    logError(`  [onboard] Could not seed sandbox policy context: ${message}`);
+    const message = errorMessage(error);
+    logError(`  [onboard] Could not seed sandbox policy context: ${error}`);
   } finally {
     process.exit = savedExit;
   }

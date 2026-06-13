@@ -5,6 +5,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
+import { errorMessage } from "../core/error-message";
 import {
   dockerCapture,
   dockerLogs,
@@ -925,7 +926,7 @@ function probeDockerGpuMode(
       error: isZeroStatus(result) ? null : resultText(result) || `docker create failed`,
     };
   } catch (error) {
-    return { ok: false, error: error instanceof Error ? error.message : String(error) };
+    return { ok: false, error: errorMessage(error) };
   } finally {
     d.dockerRm(probeName, {
       ignoreError: true,

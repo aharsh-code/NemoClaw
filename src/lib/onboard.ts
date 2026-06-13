@@ -33,6 +33,7 @@ const {
   ensureOllamaLoopbackSystemdOverride,
 }: typeof import("./onboard/ollama-systemd") = require("./onboard/ollama-systemd");
 const { bestEffortForwardStop } = require("./onboard/forward-cleanup");
+const { errorMessage } = require("./core/error-message");
 const {
   buildCompatibleEndpointSandboxSmokeCommand,
   buildCompatibleEndpointSandboxSmokeScript,
@@ -5024,7 +5025,7 @@ async function onboard(opts: OnboardOptions = {}): Promise<void> {
       }
       requestedSandboxName = validated;
     } catch (error) {
-      console.error(`  ${error instanceof Error ? error.message : String(error)}`);
+      console.error(`  ${errorMessage(error)}`);
       for (const line of getNameValidationGuidance("sandbox name", requestedSandboxName, {
         includeAllowedFormat: false,
       })) {
