@@ -3,7 +3,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 // Import from compiled dist/ so coverage is attributed correctly.
-import { parseGatewayPort, parsePort } from "../../../dist/lib/core/ports";
+import { parseGatewayPort, parseIntStrict, parsePort } from "../../../dist/lib/core/ports";
 
 const GATEWAY_VALIDATION_OPTIONS = {
   dashboardPort: 18789,
@@ -127,5 +127,27 @@ describe("parseGatewayPort", () => {
         bedrockRuntimeAdapterPort: 19002,
       }),
     ).toThrow("NEMOCLAW_BEDROCK_RUNTIME_ADAPTER_PORT");
+  });
+});
+
+describe("parseIntStrict", () => {
+  it("parses a simple integer", () => {
+    expect(parseIntStrict("42", "test")).toBe(42);
+  });
+
+  it("rejects non-numeric input", () => {
+    expect(() => parseIntStrict("abc", "test")).toThrow('test="abc" — must be an integer');
+  });
+
+  it("rejects mixed alphanumeric input", () => {
+    expect(() => parseIntStrict("80a80", "test")).toThrow('test="80a80" — must be an integer');
+  });
+
+  it("rejects empty input", () => {
+    expect(() => parseIntStrict("", "test")).toThrow('test="" — must be an integer');
+  });
+
+  it("handles the maximum safe integer", () => {
+    expect(parseIntStrict("9007199254740991", "test")).toBe(9007199254740991);
   });
 });

@@ -7,6 +7,7 @@
  * and performs lightweight reachability checks for remote cloud providers.
  */
 
+import { errorMessage } from "../core/error-message";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -203,27 +204,14 @@ function probeNvidiaKimiK26Health(
   try {
     apiKey = resolveProbeCredential(NVIDIA_HEALTH_CREDENTIAL_ENV, options);
   } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error);
+    const reason = errorMessage(error);
     return {
       ok: true,
       probed: false,
       providerLabel,
       endpoint,
-      detail:
-        `Could not resolve ${NVIDIA_HEALTH_CREDENTIAL_ENV} for Kimi K2.6 health; ` +
-        `skipping model-specific chat-completions probe. (${reason})`,
-    };
-  }
-
-  if (!apiKey) {
-    return {
-      ok: true,
-      probed: false,
-      providerLabel,
-      endpoint,
-      detail:
-        `Kimi K2.6 health requires ${NVIDIA_HEALTH_CREDENTIAL_ENV}; ` +
-        "skipping model-specific chat-completions probe instead of using provider-level /models reachability.",
+      detail: `Could not resolve ${NVIDIA_HEALTH_CREDENTIAL_ENV} for Kimi K2.6 health; ` +
+              `skipping model-specific chat-completions probe. (${reason})`,
     };
   }
 
@@ -232,7 +220,7 @@ function probeNvidiaKimiK26Health(
   try {
     authConfigPath = createAuthCurlConfig(`Authorization: Bearer ${apiKey}`);
   } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error);
+    const reason = errorMessage(error);
     return {
       ok: true,
       probed: false,

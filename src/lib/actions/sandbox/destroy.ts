@@ -9,6 +9,7 @@ import { OPENSHELL_PROBE_TIMEOUT_MS } from "../../adapters/openshell/timeouts";
 import { CLI_NAME } from "../../cli/branding";
 import { G, R, YW } from "../../cli/terminal-style";
 import { DASHBOARD_PORT } from "../../core/ports";
+import { errorMessage } from "../../core/error-message";
 import { prompt as askPrompt } from "../../credentials/store";
 import {
   type DestroySandboxOptions,
@@ -275,8 +276,7 @@ export function removeShieldsState(
       // force: true already suppresses ENOENT; warn on real failures
       // (e.g. EPERM) so stale state doesn't silently survive.
       if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
-        const message = error instanceof Error ? error.message : String(error);
-        warn(`Failed to remove shields cleanup artifact '${filePath}': ${message}`);
+        warn(`Failed to remove shields cleanup artifact '${filePath}': ${errorMessage(error)}`);
       }
     }
   }
